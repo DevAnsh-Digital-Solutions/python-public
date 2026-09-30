@@ -1,0 +1,24 @@
+[project]
+name = "ci-runner-fixture-py"
+version = "0.0.0"
+description = "Minimal Python project used as a CI test fixture for DevAnsh-Digital-Solutions/github-action-runner. No real functionality."
+requires-python = ">=3.10"
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+
+[tool.ruff.lint]
+# E/W: pycodestyle, F: pyflakes (unused imports/variables), I: import order, B: bugbear.
+select = ["E", "W", "F", "I", "B"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Lets tests `import ci_fixture` without installing the project itself.
+pythonpath = ["src"]
+
+[tool.coverage.run]
+# Measure only the package, not the tests. The central runner's coverage
+# check reads the Cobertura XML pytest-cov writes to coverage/coverage.xml.
+source = ["src"]
+branch = true

@@ -1,0 +1,39 @@
+name: CI
+
+# Public consumer: a smaller set of checks — lint, unit tests, coverage and
+# secret scan. No dependency scan. Branch/trigger policy lives here, not in
+# the central workflow.
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write # SARIF upload from lint and secret-scan
+  actions: read
+
+jobs:
+  pr-checks:
+    if: github.event_name == 'pull_request'
+    # Pre-release ref under test. Switch to @v1 once Phase 2 is released.
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@Feature/Phase-2
+    with:
+      language: python
+      enable_lint: true
+      enable_unit_test: true
+      enable_coverage: true
+      enable_dependency_scan: false
+      enable_secret_scan: true
+      coverage_threshold: 80
+
+  push-main-secret-scan:
+    if: github.event_name == 'push'
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@Feature/Phase-2
+    with:
+      language: python
+      enable_lint: false
+      enable_unit_test: false
+      enable_coverage: false
+      enable_dependency_scan: false
+      enable_secret_scan: true
