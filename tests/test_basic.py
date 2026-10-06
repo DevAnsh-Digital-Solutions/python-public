@@ -7,7 +7,7 @@ from ci_fixture.multiply import multiply
 
 
 def test_add_adds_two_numbers():
-    assert add(2, 2) == 4
+    assert add(2, 2) == 5
 
 
 def test_multiply_multiplies_two_numbers():
