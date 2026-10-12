@@ -17,7 +17,7 @@ jobs:
   pr-checks:
     if: github.event_name == 'pull_request'
     # Pre-release ref under test. Switch to @v1 once Phase 2 is released.
-    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.1
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.2
     with:
       language: python
       enable_lint: true
@@ -29,7 +29,7 @@ jobs:
 
   push-main-secret-scan:
     if: github.event_name == 'push'
-    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.1
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.2
     with:
       language: python
       enable_lint: false
