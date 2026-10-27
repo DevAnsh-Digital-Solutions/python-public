@@ -12,12 +12,13 @@ permissions:
   contents: read
   security-events: write # SARIF upload from lint and secret-scan
   actions: read
+  pull-requests: write # lets the advisory AI review post its PR comment
 
 jobs:
   pr-checks:
     if: github.event_name == 'pull_request'
-    # Pre-release ref under test. Switch to @v1 once Phase 2 is released.
-    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.2
+    # Pre-release ref under test. Switch to @v1 once released.
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.3
     with:
       language: python
       enable_lint: true
@@ -26,10 +27,18 @@ jobs:
       enable_dependency_scan: false
       enable_secret_scan: true
       coverage_threshold: 80
+      # Advisory AI review, only on PRs targeting main. To review other
+      # branches, change the expression, e.g.
+      #   ${{ contains(fromJSON('["main","develop"]'), github.base_ref) }}
+      enable_llm_review: ${{ github.base_ref == 'main' }}
+      llm_provider: openai-compatible # OpenAI's API (default base URL)
+      llm_model: gpt-4o
+    secrets:
+      ai_token: ${{ secrets.AI_TOKEN }}
 
   push-main-secret-scan:
     if: github.event_name == 'push'
-    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.2
+    uses: DevAnsh-Digital-Solutions/github-action-runner/.github/workflows/central-ci.yml@v1.1.0-rc.3
     with:
       language: python
       enable_lint: false
